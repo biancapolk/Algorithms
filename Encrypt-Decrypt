@@ -1,0 +1,163 @@
+#Encrypt/Decrypt algorithms including OTP and RC4 
+
+MOD = 256
+def oneTimePad(plaintext, key):
+    encrypt(plaintext, key)
+
+def encrypt(plaintext, key):
+    # encryping using plaintext and key
+
+    #initializing ciphertext variable
+    ciphertext = ""
+
+    # plaintext text -> byte string to encrpyt / decrypt
+    plaintextToBinary = ' '.join(format(ord(i), 'b').zfill(8) for i in plaintext)
+    # key -> encryption key used for encrypting
+    keyInBinary = ' '.join(format(ord(i), 'b').zfill(8) for i in key)
+
+
+    for a, b in zip(plaintextToBinary, keyInBinary):
+        if a.isspace() and b.isspace():
+            ciphertext += " "
+
+        else:
+            if a == b:
+                ciphertext += str(0)
+            else:
+                ciphertext += str(1)
+
+    print("Plaintext in binary = ", plaintextToBinary)
+    print("Key in binary = ", keyInBinary)
+    print("Ciphertext = ", ciphertext)
+
+    #input results and call decrypt method
+    decrypt(ciphertext, key)
+
+
+def decrypt(ciphertext, key):
+
+    #decryping using ciphertext and key
+    # key -> encryption key used for encrypting
+    # ciphertext + key -> byte string to decrypt to plaintext
+    keyInBinary = ' '.join(format(ord(i), 'b').zfill(8) for i in key)
+
+    #storing variable here
+    decryptedMessageInBinary = ""
+
+    for a, b in zip(ciphertext, keyInBinary):
+        if a.isspace() and b.isspace():
+            decryptedMessageInBinary += " "
+
+        else:
+            if a == b:
+                decryptedMessageInBinary += str(0)
+            else:
+                decryptedMessageInBinary += str(1)
+
+    print("Decrypted message in binary = ", decryptedMessageInBinary, '\n')
+    plaintext = ""
+    for x in decryptedMessageInBinary.split():
+        if x.isspace():
+            plaintext += " "
+
+        else:
+            plaintext += chr(int(x, 2))
+
+
+    print("Decrypted plain text = ", plaintext, '\n')
+
+
+
+def RC4(key):
+    # takes the encryption key to get the keystream using phase two and return object
+    S = phaseOne(key)
+    return phaseTwo(S)
+
+
+def phaseOne(key):
+    # key Scheduling Algorithm
+    # S[0...255] <-- {0...255} (based on key), i<--0, j<--0
+    key_length = len(key)
+    # create the array "S"
+    S = list(range(MOD))  # [0,1,2, ... , 255]
+    j = 0
+    for i in range(MOD):
+        # getting key and duplicating
+        j = (j + S[i] + key[i % key_length]) % MOD
+        S[i], S[j] = S[j], S[i]  # swap values
+
+    return S
+
+
+def phaseTwo(S):
+    # generating psuedo-random bytes
+    i = 0
+    j = 0
+    while True:
+        # i <-- (i + 1) mod 256
+        i = (i + 1) % MOD
+
+        # j <-- (j + S[i]) mod 256
+        j = (j + S[i]) % MOD
+
+        S[i], S[j] = S[j], S[i]  # swap S[i] <-> S[j]
+        K = S[(S[i] + S[j]) % MOD] # return  S[(S[i] + S[j]) mod 256
+
+        yield K
+
+
+
+
+def main():
+    cont = True
+    choice = ""
+    print(
+        "OTP Program.  Key must be less than or equal to plaintext in length.")
+
+
+    while cont == True:
+        choice = input("Make a selection: \n1: OTP\n2: RC4\n3: Exit")
+
+        if choice == "1":
+            print ("---One Time Pad---")
+
+            plaintext = input("Please enter a message: ")  # plaintext
+            key = input("Please enter a key: ")  # key
+
+            # checking that key length matches plaintext len
+            if len(plaintext) != len(key):
+                print("Size mismatch! Please enter a valid plaintext and key")
+            else:
+                oneTimePad(plaintext, key)
+                print('\nSuccess!')
+
+
+        elif choice == "2":
+            print ("---RC4---")
+            plaintext = input("Please enter a message: ")  # plaintext
+            key = input("Please enter a sort key: ")  # key
+
+            # encrypt the plaintext, using key and RC4 algorithm
+            ciphertext = encrypt(plaintext, key)
+
+            # change ciphertext to string again
+            decrypted = decrypt(ciphertext, key)
+            print('decrypted:', decrypted)
+
+            if plaintext == decrypted:
+                print('\nSuccess!')
+            else:
+                print('Oops!')
+
+        elif choice == "3":
+            cont = False
+
+        else:
+            print("Please choose 1, 2, or 3")
+
+
+if __name__ == '__main__':
+    main()
+
+
+
