@@ -1,0 +1,37 @@
+
+# Python Program to check if two strings are anagrams of each other using dictionaries
+
+def anagram(string):
+    # creating dictionary to place string characters in
+    word = []
+
+    # for every character in the string input, add to dictionary
+    for character in string.lower():
+        word.append(character)
+
+    # For every character that is in word input, if its not in the second word input, modify word value
+    secondWord = {}
+    for character in word:
+        if character not in secondWord:
+            secondWord[character] = 1
+        else:
+            secondWord[character] = secondWord[character] + 1
+
+    return secondWord
+
+
+print("-------------ANAGRAM READER------------")
+
+# setting the first string input to the word "space"
+s1 = "space"
+
+# prompting user for second word input
+s2 = input("Enter the 2nd string: ")
+
+a = anagram(s1)
+b = anagram(s2)
+
+if a == b:
+    print("Anagram!")
+else:
+    print("Not Anagram")
