@@ -1,0 +1,19 @@
+
+# Python Program to find Last Digit in a Number
+print("-------------BINARY STRING READER------------")
+# taking user input
+number = int(input("Please enter a binary string: "))
+
+def last_two_digits(number, index):
+    # abs to move the digit to the ones position, then the % gets the remainder after division by 10
+    n = abs(number) % (10**index)
+
+    # variable in has to be 00 or 11 else invalid
+    if (n == 00) or (n == 11):
+        print("Last two digits are: ")
+        print(n)
+    else:
+        print("INVALID! last two digits are NOT '00' or '11")
+
+# calling function with variable input
+last_two_digits(number, 2)
