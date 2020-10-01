@@ -1,0 +1,26 @@
+package puzzle_examples_package;
+
+import java.util.Scanner;
+
+public class ReverseANumber {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//Ask user for number 
+		System.out.println("Please enter a number");
+		Scanner scan = new Scanner(System.in);
+		int originalNumber = scan.nextInt();
+		int	reversedNumber = 0;
+		System.out.println(originalNumber);
+		int i; 
+		while(originalNumber != 0){
+			i = originalNumber % 10;
+			reversedNumber = (reversedNumber * 10) + i;
+			originalNumber = originalNumber/10;
+		}
+		System.out.println(reversedNumber);
+
+
+	}
+
+}
